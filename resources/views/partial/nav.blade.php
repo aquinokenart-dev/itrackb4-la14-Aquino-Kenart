@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
     <div class="container-fluid">
 
@@ -31,6 +30,23 @@
                 </li>
 
             </ul>
+
+            @guest
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Log in</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
+                </ul>
+            @endguest
+
+            @auth
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="navbar-text me-3">{{ Auth::user()->name }}</span>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-light btn-sm">Log out</button>
+                    </form>
+                </div>
+            @endauth
         </div>
 
     </div>

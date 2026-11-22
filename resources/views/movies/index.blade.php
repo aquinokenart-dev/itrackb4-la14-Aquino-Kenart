@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Movie List')
@@ -6,9 +5,11 @@
 @section('content')
     <h2>All Movies</h2>
 
-    <div class="mb-3">
-        <a href="{{ route('movies.create') }}" class="btn btn-success">Add New Movie</a>
-    </div>
+    @auth
+        <div class="mb-3">
+            <a href="{{ route('movies.create') }}" class="btn btn-success">Add New Movie</a>
+        </div>
+    @endauth
 
     <p>
         Active filters:
@@ -111,7 +112,9 @@
                 <th>Genre</th>
                 <th>Rating</th>
                 <th>Year</th>
-                <th>Action</th>
+                @auth
+                    <th>Action</th>
+                @endauth
             </tr>
         </thead>
 
@@ -127,24 +130,26 @@
                     <td>{{ $movie->genre->name }}</td>
                     <td>{{ $movie->rating }}</td>
                     <td>{{ $movie->year }}</td>
-                    <td>
-                        <a href="{{ route('movies.edit', $movie) }}"
-                            class="btn btn-sm btn-warning">Edit</a>
+                    @auth
+                        <td>
+                            <a href="{{ route('movies.edit', $movie) }}"
+                                class="btn btn-sm btn-warning">Edit</a>
 
-                        <form action="{{ route('movies.destroy', $movie) }}"
-                            method="POST" class="d-inline"
-                            onsubmit="return confirm('Delete this record?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                Delete
-                            </button>
-                        </form>
-                    </td>
+                            <form action="{{ route('movies.destroy', $movie) }}"
+                                method="POST" class="d-inline"
+                                onsubmit="return confirm('Delete this record?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    @endauth
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6">No movies found.</td>
+                    <td colspan="{{ auth()->check() ? 6 : 5 }}">No movies found.</td>
                 </tr>
             @endforelse
         </tbody>
